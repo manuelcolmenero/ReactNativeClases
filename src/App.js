@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Actions, Scene, Router } from 'react-native-router-flux';
 
-import Screen1 from 'react_native_app/src/sections/Screen1'
-import Screen2 from 'react_native_app/src/sections/Screen2'
+import HousesList from 'react_native_app/src/sections/houses/HousesList'
 
 // Class Main
 export default class App extends Component {
@@ -15,17 +14,10 @@ export default class App extends Component {
         <Scene key="root">
 
           <Scene
-            key={'screen1'}
-            component={Screen1}
+            key={ 'HousesList' }
+            component={ HousesList }
           />
-          
-          <Scene
-            key={'screen2'}
-            component={Screen2}
-          />
-
-
-        </Scene>
+          </Scene>
       </Router>
     );
   }
