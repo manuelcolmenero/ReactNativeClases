@@ -1,7 +1,7 @@
 // Imports
 import React, { Component } from 'react';
-import { View, Text, FlatList, Image, Button } from 'react-native';
-import axios from 'axios'
+import { View, Text, StyleSheet, FlatList, Image, Button } from 'react-native';
+import { AsyncCalls, Colors } from 'react_native_app/src/commons'
 
 export default class HousesList extends Component {
 
@@ -14,49 +14,54 @@ export default class HousesList extends Component {
     }
 
     componentWillMount() {
+        AsyncCalls.fetchHousesList()
+        .then((response) => {
+            console.log("Axios get response: ", response);
 
-        // Se obtiene el listado de casas de forma asincrona
-        axios.get('http://146.185.137.85/got/web/casas')
-            .then((response) => {
-                console.log("Axios get response: ", response);
+            // Si existen datos deja pasar, pero si no hay datos devuelve array vacio
+            const listData = response.data && response.data.records ? response.data.records : []
+            this.setState({ list: listData })
 
-                // Si existen datos deja pasar, pero si no hay datos devuelve array vacio
-                const listData = response.data && response.data.records ? response.data.records : []
-                this.setState({ list: listData })
+            // Forma corta de mover los datos
+            // this.setState({
+            //     list: response.data && response.data.records ? response.data.records : []
+            // })
+        })
+        .catch((error) => {
+            console.log("Axios get error: ", error);
+        });
 
-                // Forma corta de mover los datos
-                // this.setState({
-                //     list: response.data && response.data.records ? response.data.records : []
-                // })
-            })
-            .catch((error) => {
-                console.log("Axios get error: ", error);
-            });
     }
 
-    renderItem(item) {
+    checkIsSelected(item) {
+        if (this.state.selected && (this.state.selected.id == item.id)) {
+            return true
+        } else {
+            return false
+
+        }
+    }
+
+    renderItem(item, index) {
+        const isSelected = this.checkIsSelected(item) 
+
+        const cellStyle = isSelected ? { backgroundColor: 'gold' } : { backgroundColor: Colors.white }
+        const titleStyle = isSelected ? { color: 'red' } : { color: 'black' }
+        const colorStyle = isSelected ? 'grey' : 'black'
         return (
-            <View style={{
-                height: 150,
-                backgroundColor: '#F7F7F7',
-                margin: 5,
-                padding: 15,
-                shadowColor: '#000000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.8,
-                shadowRadius: 2,
-                elevation: 1,
-            }}>
+            
+            <View style={[style.cell, cellStyle]}>
                 <Image
                     style={{ width: 50, height: 50 }}
                     source={{ uri: item.image_dir }}
                 />
-                <Text>Name: {item.nombre} </Text>
-                <Text>Words: {item.lema} </Text>
+                <Text style={[style.textCell, titleStyle]}>Name: {item.nombre} </Text>
+                <Text style={[style.textCell, titleStyle]}>Words: {item.lema} </Text>
 
                 <Button
                     title={'Selecciona casa'}
                     onPress={() => this.setState({ selected: item })}
+                    color={colorStyle}
                 />
             </View>
         )
@@ -67,13 +72,40 @@ export default class HousesList extends Component {
         return (
 
             <View>
-                <Text style={{fontSize:20, textAlign: 'center', marginVertical: 20}}> { nombre }</Text>
+                <Text style={style.title}> {nombre}</Text>
 
                 <FlatList
                     data={this.state.list}
-                    renderItem={({ item }) => this.renderItem(item)}
+                    renderItem={({ item, index }) => this.renderItem(item, index)}
+                    keyExtractor={(item,key)=> item.id}
+                    extraData={ this.state}
                 />
             </View>
         )
     }
 }
+
+const style = StyleSheet.create({
+    cell: {
+        // height: 100, 
+        // marginVertical: 10
+        height: 150,
+        backgroundColor: Colors.white,
+        margin: 5,
+        padding: 15,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    title: {
+        fontSize: 20, 
+        textAlign: 'center', 
+        marginVertical: 20,
+    },
+    textCell: {
+        fontSize: 14, 
+        textAlign: 'center', 
+    }
+})
