@@ -14,22 +14,9 @@ export default class HousesList extends Component {
     }
 
     componentWillMount() {
-        AsyncCalls.fetchHousesList()
-        .then((response) => {
-            console.log("Axios get response: ", response);
-
-            // Si existen datos deja pasar, pero si no hay datos devuelve array vacio
-            const listData = response.data && response.data.records ? response.data.records : []
-            this.setState({ list: listData })
-
-            // Forma corta de mover los datos
-            // this.setState({
-            //     list: response.data && response.data.records ? response.data.records : []
-            // })
+        return AsyncCalls.fetchHousesList().then(response => {
+            this.setState({ list: response })
         })
-        .catch((error) => {
-            console.log("Axios get error: ", error);
-        });
 
     }
 
@@ -43,13 +30,14 @@ export default class HousesList extends Component {
     }
 
     renderItem(item, index) {
-        const isSelected = this.checkIsSelected(item) 
+        const isSelected = this.checkIsSelected(item)
 
         const cellStyle = isSelected ? { backgroundColor: 'gold' } : { backgroundColor: Colors.white }
         const titleStyle = isSelected ? { color: 'red' } : { color: 'black' }
         const colorStyle = isSelected ? 'grey' : 'black'
+
         return (
-            
+
             <View style={[style.cell, cellStyle]}>
                 <Image
                     style={{ width: 50, height: 50 }}
@@ -77,35 +65,11 @@ export default class HousesList extends Component {
                 <FlatList
                     data={this.state.list}
                     renderItem={({ item, index }) => this.renderItem(item, index)}
-                    keyExtractor={(item,key)=> item.id}
-                    extraData={ this.state}
+                    keyExtractor={(item, key) => item.id}
+                    extraData={this.state}
                 />
             </View>
         )
     }
 }
 
-const style = StyleSheet.create({
-    cell: {
-        // height: 100, 
-        // marginVertical: 10
-        height: 150,
-        backgroundColor: Colors.white,
-        margin: 5,
-        padding: 15,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 1,
-    },
-    title: {
-        fontSize: 20, 
-        textAlign: 'center', 
-        marginVertical: 20,
-    },
-    textCell: {
-        fontSize: 14, 
-        textAlign: 'center', 
-    }
-})
