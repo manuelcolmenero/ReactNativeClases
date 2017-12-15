@@ -13,10 +13,15 @@ function updateHousesList(value) {
 export function fetchHouseList() { 
     return (dispatch, getState) => {
 
+        // Llamada al ws que descarga el listado de casas
         const fetchURL = '/casas'
+
         fetch(fetchURL).then(response => {
             console.log("fetch response: ", response)
             const list = response.records
+
+            // Segunda llamada al dispatch es para devolver los datos recuperados 
+            // al reducer
             dispatch(updateHousesList(list))
         }).catch(error => {
             console.log("error: ", error)

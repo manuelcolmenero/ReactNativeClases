@@ -21,8 +21,8 @@ class HousesList extends Component {
     }
 
     componentWillMount() {
-
-       this.props.fetchHouseList()
+        // Se invoca la función que obtendrá los datos
+        this.props.fetchHouseList()
     }
 
     onSelect(house) {
@@ -60,14 +60,19 @@ console.log("this.props: ", this.props)
 }
 
 const mapStateToProps = (state) => {
-    console.log("state.houses: ", state.houses)
+    // console.log("state.houses: ", state.houses)
     return {
+
+        // Del listado de state lo pasamos a listado para inyectar la propiedad 
+        // al componente houses.js de reducers
         list: state.houses.list,
     }
 }
 
+
 const mapDispatchToProps = (dispatch, props) => {
     return {
+        // Se declara una función con un dispatch de la action de obtener datos
         fetchHouseList: () => {
             dispatch(HousesActions.fetchHouseList())
         },
