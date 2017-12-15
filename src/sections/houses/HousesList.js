@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { AsyncCalls, Colors } from 'react_native_app/src/commons'
+import { Actions } from 'react-native-router-flux'
 
 import HousesCell from 'react_native_app/src/sections/houses/HousesCell'
 
@@ -79,7 +80,7 @@ class HousesList extends Component {
         console.log("this.props: ", this.props)
         return (
 
-            <View style={style.container}>
+            <View style={styles.container}>
 
                 <FlatList
                     data={this.props.list}
@@ -102,8 +103,10 @@ const mapStateToProps = (state) => {
         // Se guarda de forma global el listado que posee el estado de la aplicación
         list: state.houses.list,
 
+        /*         
         // Se indica cual es la casa que se tiene seleccionada
-        selected: state.houses.item,
+        selected: state.houses.item, 
+        */
 
         // Se recupera la propiedad isFetching del global
         isFetching: state.houses.isFetching,
@@ -120,6 +123,9 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         updateSelected: (house) => {
             dispatch(HousesActions.updateHouseSelected(house))
+            // Se llama a la siguiente pantalla para el listado de personajes
+            // Pone el nombre de House seleccionada como titulo de la pantalla
+            Actions.CharactersList({ title: house.nombre })
         },
     }
 }
@@ -127,11 +133,12 @@ const mapDispatchToProps = (dispatch, props) => {
 export default connect(mapStateToProps, mapDispatchToProps)(HousesList)
 
 // Si se desea poner el color en HEX #434344
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(42,42,42)',
-        paddingVertical: 20,
+        backgroundColor: Colors.containerBackground,
+        paddingBottom: 20,
+        paddingTop: 60,
 
     },
 })
