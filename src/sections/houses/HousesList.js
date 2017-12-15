@@ -1,6 +1,6 @@
 // Imports
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { AsyncCalls, Colors } from 'react_native_app/src/commons'
 
 import HousesCell from 'react_native_app/src/sections/houses/HousesCell'
@@ -26,7 +26,41 @@ class HousesList extends Component {
     }
 
     onSelect(house) {
-        
+        // Pretende actualizar que casa está marcada al pulsar
+        this.props.updateSelected(house)
+    }
+
+    renderFooter() {
+        // Siempre se devuelve indicador de carga que sólo se pinta si isFetching = TRUE
+        return <ActivityIndicator
+            animating={this.props.isFetching}
+            size='large'
+            color='#00FFFF'
+            style={{ marginVertical: 20 }}
+        />
+
+        /* 
+        ********************** 
+        Este código no se ejecuta dado que el return anterior no permite que continue
+        Se implementa el código para ver otra forma de como hacerlo
+        ********************** 
+        */
+        // Otra forma de hacer lo mismo que la linea anterior
+        if (this.props.isFetching) {
+            return (
+                <View>
+                    <ActivityIndicator
+                        animating={this.props.isFetching}
+                        size='large'
+                        color='#00FFFF'
+                        style={{ marginVertical: 20 }}
+                    />
+                </View>
+            )
+
+        } else {
+            return null
+        }
     }
 
     renderItem(item, index) {
@@ -37,12 +71,12 @@ class HousesList extends Component {
         return (
             <HousesCell
                 item={item}
-                onSelect={ (value) => this.onSelect(value)}
+                onSelect={(value) => this.onSelect(value)}
             />)
     }
 
     render() {
-console.log("this.props: ", this.props)
+        console.log("this.props: ", this.props)
         return (
 
             <View style={style.container}>
@@ -53,6 +87,10 @@ console.log("this.props: ", this.props)
                     keyExtractor={(item, index) => item.id}
                     extraData={this.state}
                     numColumns={2}
+                    ListFooterComponent={
+                        () => this.renderFooter()
+                    }
+
                 />
             </View>
         )
@@ -60,12 +98,16 @@ console.log("this.props: ", this.props)
 }
 
 const mapStateToProps = (state) => {
-    // console.log("state.houses: ", state.houses)
     return {
-
-        // Del listado de state lo pasamos a listado para inyectar la propiedad 
-        // al componente houses.js de reducers
+        // Se guarda de forma global el listado que posee el estado de la aplicación
         list: state.houses.list,
+
+        // Se indica cual es la casa que se tiene seleccionada
+        selected: state.houses.item,
+
+        // Se recupera la propiedad isFetching del global
+        isFetching: state.houses.isFetching,
+
     }
 }
 
@@ -76,8 +118,8 @@ const mapDispatchToProps = (dispatch, props) => {
         fetchHouseList: () => {
             dispatch(HousesActions.fetchHouseList())
         },
-        updateSelected: () => {
-            
+        updateSelected: (house) => {
+            dispatch(HousesActions.updateHouseSelected(house))
         },
     }
 }
@@ -90,6 +132,6 @@ const style = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgb(42,42,42)',
         paddingVertical: 20,
-        
+
     },
 })

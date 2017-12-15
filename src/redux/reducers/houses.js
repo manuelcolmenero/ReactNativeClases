@@ -21,7 +21,18 @@ export default function reducer(state = initialState, action = {}) {
                 // Se sustituye la propiedad list con el valor recibido del action
                 // antes de devolverla al reducer
                 list: action.value
-            };
+            }
+        case types.HOUSES_UPDATE_HOUSE:
+            return {
+                ...state,
+
+                item: action.value
+            }
+        case types.HOUSES_SET_FETCHING:
+            return {
+                ...state,
+                isFetching: action.value
+            }
         default:
             return state;
     }
