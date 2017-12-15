@@ -16,6 +16,14 @@ function setHousesFetching(value) {
     }
 }
 
+export function updateHouseSelected(value) {
+    return {
+        type: types.HOUSES_UPDATE_HOUSE,
+        // Cuando se llaman igual el valor y la variable se puede poner sólo el nombre sin asignarlo
+        value
+    }
+}
+
 // Función para cargar el WS del listado
 export function fetchHouseList() {
     return (dispatch, getState) => {
@@ -37,13 +45,5 @@ export function fetchHouseList() {
             dispatch(setHousesFetching(false))
             console.log("error: ", error)
         })
-    }
-}
-
-export function updateHouseSelected(value) {
-    return {
-        type: types.HOUSES_UPDATE_HOUSE,
-        // Cuando se llaman igual el valor y la variable se puede poner sólo el nombre sin asignarlo
-        value
     }
 }
