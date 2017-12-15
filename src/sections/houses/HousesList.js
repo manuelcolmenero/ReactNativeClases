@@ -2,10 +2,14 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { AsyncCalls, Colors } from 'react_native_app/src/commons'
-import { fetch } from 'react_native_app/src/webservices/webservices'
+
 import HousesCell from 'react_native_app/src/sections/houses/HousesCell'
 
-export default class HousesList extends Component {
+// Redux
+import { connect } from 'react-redux'
+import * as HousesActions from 'react_native_app/src/redux/actions/houses'
+
+class HousesList extends Component {
 
     constructor(props) {
         super(props)
@@ -17,17 +21,12 @@ export default class HousesList extends Component {
     }
 
     componentWillMount() {
-        fetch('/casas').then(response => {
-            console.log("fetch response: ", response)
-            this.setState({ list: response.records })
-        }).catch(error => {
-            console.log("error: ", error)
-        })
+
+       this.props.fetchHouseList()
     }
 
     onSelect(house) {
-        // Pone en la variable de estado el nombre recibido
-        this.setState({ selected: house })
+        
     }
 
     renderItem(item, index) {
@@ -38,20 +37,18 @@ export default class HousesList extends Component {
         return (
             <HousesCell
                 item={item}
-                // Se elimina el llamador y se informan datos por defecto en la celda para 
-                // evitar que genere errores
-                // onSelect={(nameHouse) => this.onSelect(nameHouse)}
+                onSelect={ (value) => this.onSelect(value)}
             />)
     }
 
     render() {
-
+console.log("this.props: ", this.props)
         return (
 
             <View style={style.container}>
 
                 <FlatList
-                    data={this.state.list}
+                    data={this.props.list}
                     renderItem={({ item, index }) => this.renderItem(item, index)}
                     keyExtractor={(item, index) => item.id}
                     extraData={this.state}
@@ -61,6 +58,27 @@ export default class HousesList extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    console.log("state.houses: ", state.houses)
+    return {
+        list: state.houses.list,
+    }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        fetchHouseList: () => {
+            dispatch(HousesActions.fetchHouseList())
+        },
+        updateSelected: () => {
+            
+        },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HousesList)
+
 // Si se desea poner el color en HEX #434344
 const style = StyleSheet.create({
     container: {

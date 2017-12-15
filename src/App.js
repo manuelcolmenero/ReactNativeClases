@@ -7,6 +7,21 @@ import HousesList from 'react_native_app/src/sections/houses/HousesList'
 
 import * as webservices from 'react_native_app/src/webservices/webservices'
 
+/* ****************************************** */
+// Imports de Redux
+import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { Provider, connect } from 'react-redux'
+import thunk from 'redux-thunk'
+import * as reducers from './redux/reducers' // Nuestros reducers
+
+const reducer = combineReducers(reducers) // Combinamos nuestros reducers
+const store = createStore( // Creamos el store con:
+    reducer, // Nuestros reducer
+    applyMiddleware(thunk) // Nuestro middleware
+)
+/* ****************************************** */
+
+
 // Class Main
 export default class App extends Component {
 
@@ -22,16 +37,17 @@ export default class App extends Component {
     console.disableYellowBox = true;
 
     return (
-      <Router>
-        <Scene key="root">
-
-          <Scene
-            key={ 'HousesList' }
-            component={ HousesList }
-            hideNavBar
-          />
-          </Scene>
-      </Router>
+      <Provider store={store} >
+          <Router>
+              <Scene key="root">
+                  <Scene 
+                      key={ 'HousesList' }
+                      component={ HousesList }
+                      hideNavBar
+                  />
+              </Scene>
+          </Router>
+      </Provider>
     );
   }
 }
