@@ -17,7 +17,7 @@ export default class CharactersCell extends Component {
         // Se validan los datos a pintar
         const name = item.nombre ? item.nombre : ''
         const age = item.edad ? item.edad : ''
-        const image = item.image_dir ? { uri: item.image_dir } : null
+        const image = item.image_dir ? { uri: item.image_dir } : require('react_native_app/src/resources/placeholder.png')
 
         return (
             <TouchableOpacity onPress={() => onSelect(item)} >

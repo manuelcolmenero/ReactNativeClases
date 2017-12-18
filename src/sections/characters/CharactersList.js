@@ -8,6 +8,7 @@ import CharactersCell from 'react_native_app/src/sections/characters/CharactersC
 // Redux
 import { connect } from 'react-redux'
 import * as CharactersActions from 'react_native_app/src/redux/actions/characters'
+import { Actions } from 'react-native-router-flux';
 
 class CharactersList extends Component {
 
@@ -43,18 +44,12 @@ class CharactersList extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <FlatList
-                    data                = { this.props.list }
-                    renderItem          = { ({ item, index }) => this.renderItem(item, index)}
-                    keyExtractor        = { (item, index) => item.id}
-                    extraData           = { this.state }
-                    /*
-                    numColumns          = { 2 }
-                    ListFooterComponent = {
-                        () => this.renderFooter()
-                    }
-                    */
-                /> 
+                <FlatList 
+                    data            = { this.props.list }
+                    renderItem      = { ({item, index}) => this.renderItem(item, index) }
+                    keyExtractor    = { (item, index) => index }
+                    extraData       = { this.props }
+                />
             </View>
         )
     }
@@ -63,8 +58,9 @@ class CharactersList extends Component {
 const mapStateToProps = (state) => {
     return {
         // Se optiene por medio de props la casa (que es el item)
-        house: state.houses.item,
-        list: state.characters.list,
+        house       : state.houses.item,
+        list        : state.characters.list,
+        character   : state.characters.item,
 
     }
 }
@@ -76,7 +72,8 @@ const mapDispatchToProps = (dispatch, props) => {
             dispatch(CharactersActions.fetchCharactersList(houseId))
         },
         updateSelected: (character) => {
-            console.log("mapDispatchToProps updateSelected character: ", character)
+            dispatch(CharactersActions.updateCharactersSelected(character))
+            Actions.CharacterView({ title: character.nombre })
         },
     }
 }

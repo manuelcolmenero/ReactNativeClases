@@ -1,13 +1,16 @@
 // Imports
 import React, { Component } from 'react';
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet, StatusBar, TouchableOpacity, Text } from 'react-native';
 import { Actions, Scene, Router } from 'react-native-router-flux';
-import {Colors} from 'react_native_app/src/commons'
+import { Colors } from 'react_native_app/src/commons'
 
 /* ****************************************** */
 // Componentes propios
 import HousesList from 'react_native_app/src/sections/houses/HousesList'
 import CharactersList from 'react_native_app/src/sections/characters/CharactersList'
+import CharacterView from 'react_native_app/src/sections/characters/CharacterView'
+import CharacterNew from 'react_native_app/src/sections/characters/CharacterNew'
+
 /* ****************************************** */
 
 import * as webservices from 'react_native_app/src/webservices/webservices'
@@ -35,6 +38,17 @@ export default class App extends Component {
         StatusBar.setBarStyle('light-content')
 
     }
+    renderAddCharacterButton() {
+        return (
+            <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => Actions.CharacterNew()} >
+
+                <Text style={styles.addButtonText}>{'Añadir'}</Text>
+            </TouchableOpacity>
+        )
+
+    }
 
     render() {
 
@@ -56,10 +70,26 @@ export default class App extends Component {
                             component={CharactersList}
                             navigationBarStyle={styles.navBar}
                             navBarButtonColor={Colors.white}
+
+                            renderRightButton={() => this.renderAddCharacterButton()}
+                        />
+
+                        <Scene
+                            key={'CharacterView'}
+                            component={CharacterView}
+                            navigationBarStyle={styles.navBar}
+                            navBarButtonColor={Colors.white}
+                        />
+                        <Scene
+                            key={'CharacterNew'}
+                            component={CharacterNew}
+                            navigationBarStyle={styles.navBar}
+                            navBarButtonColor={Colors.white}
+                            title={'Añadir'}
                         />
                     </Scene>
                 </Router>
-            </Provider>
+            </Provider >
         );
     }
 }
@@ -69,4 +99,14 @@ const styles = StyleSheet.create({
     navBar: {
         backgroundColor: Colors.navBarbackground,
     },
+    addButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    addButton: {
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 });

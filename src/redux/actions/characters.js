@@ -1,5 +1,6 @@
 import * as types from '../types/characters'
-import { fetch, post } from 'react_native_app/src/webservices/webservices'
+import { fetch, post, remove } from 'react_native_app/src/webservices/webservices'
+import { Actions } from 'react-native-router-flux';
 
 // Funcion que devuelve el action que actualiza
 function updateCharactersList(value) {
@@ -16,10 +17,10 @@ function setCharactersFetching(value) {
     }
 }
 
-export function updateCharactersSelected(value) {
+export function updateCharactersSelected(character) {
     return {
         type: types.CHARACTERS_UPDATE_CHARACTER,
-        value: value
+        character: character
     }
 }
 
@@ -57,4 +58,39 @@ export function fetchCharactersList(houseId) {
                 console.log("fetchCharactersList error: ", error)
             })
     }
+}
+
+export function deleteCharacter(character){
+    return(dispatch, getState) => {
+
+        dispatch(setCharactersFetching(true))
+
+        const fetchURL = '/personajes/' + character.id
+
+        const state = getState()
+        const house = state.houses.item
+        
+        remove( fetchURL)
+        .then(response => {
+
+            dispatch(setCharactersFetching(false))
+            console.log("fetchCharactersList response: ", response)
+
+            if (response.status && response.status == 'ok') {
+
+                // Se recarga el listado de personajes de la casa
+                dispatch(fetchCharactersList(house.id))
+
+                // Se elimina el personaje selecionado
+                dispatch(updateCharactersSelected(null))
+
+                // Se vuelve a la anterior lista
+                Actions.pop()
+            }
+        })
+        .catch(error => {
+            dispatch(setCharactersFetching(false))
+            console.log("fetchCharactersList error: ", error)
+        })
+    } 
 }

@@ -23,6 +23,38 @@ export function fetch(url) {
     })
 }
 
+export function post(url, data) {
+    return new Promise(function(resolve, reject) {
+
+        axios.post(url, data).then( response => {
+
+            if(response.data)
+                resolve( response.data )
+            else 
+                reject( response )
+
+        }).catch( error => {
+            reject( error )
+        });
+    })
+}
+
+export function remove(url, data) {
+    return new Promise(function(resolve, reject) {
+
+        axios.delete(url, data).then( response => {
+
+            if(response.data)
+                resolve( response.data )
+            else 
+                reject( response )
+
+        }).catch( error => {
+            reject( error )
+        });
+    })
+}
+
 export function fetchAlternativo(url) {
     return axios.get(url).then((response) => {
 
@@ -41,21 +73,7 @@ export function fetchAlternativo(url) {
     });
 }
 
-export function post(url, data) {
-    return new Promise(function(resolve, reject) {
 
-        axios.post(url, data).then( response => {
-
-            if(response.data)
-                resolve( response.data )
-            else 
-                reject( response )
-
-        }).catch( error => {
-            reject( error )
-        });
-    })
-}
 
 export function postAlternativo (url, data) {
     return axios.post(url, data).then( response => {
