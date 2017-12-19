@@ -52,5 +52,12 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>¿Da permiso para acceder a la libreria de imagenes?</string>
+  <key>NSCameraUsageDescription</key>
+  <string>¿Da permiso para acceder a la camara?</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>¿Da permiso para guardar imágenes en la librería de imagenes?</string>
+  
 </dict>
 </plist>

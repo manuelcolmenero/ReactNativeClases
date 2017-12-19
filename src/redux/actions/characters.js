@@ -94,3 +94,40 @@ export function deleteCharacter(character){
         })
     } 
 }
+
+export function postCharacter(data) {
+    return (dispatch, getState) => {
+
+        dispatch(setCharactersFetching(true))
+
+        console.log('data: ', data)
+
+        const fetchURL = '/personajes'
+        const state = getState()
+        const house = state.houses.item
+        
+        post( fetchURL, data)
+        .then(response => {
+
+            dispatch(setCharactersFetching(false))
+            console.log("postCharacter response: ", response)
+            
+            if (response.record) {
+
+                // Se recarga el listado de personajes de la casa
+                dispatch(fetchCharactersList(house.id))
+
+                // Se elimina el personaje selecionado
+                dispatch(updateCharactersSelected(null))
+
+                // Se vuelve a la anterior lista
+                Actions.pop()
+            }
+        })
+        .catch(error => {
+            dispatch(setCharactersFetching(false))
+            console.log("postCharacter error: ", error)
+        })
+ 
+    }
+}

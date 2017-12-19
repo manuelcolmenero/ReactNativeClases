@@ -6,31 +6,33 @@ import { Colors } from 'react_native_app/src/commons'
 export default class Input extends Component {
 
     static defaultProps = {
-        inputStyle: {},
-        labelStyle: {},
-        errorStyle: {},
-        label: '',
-        value: '',
-        error: '',
-        placeholder: '',
-        onChangeText: () => { },
+        labelStyle   : {},
+        inputStyle   : {},
+        errorStyle   : {},
+        label        : '',
+        value        : '',
+        error        : '',
+        placeholder  : '',
+        onChangeText : () => { },
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={[styles.label, this.props.labelStyle]} >{this.props.label}</Text>
+
+                <Text style={[styles.label, this.props.labelStyle]}>{this.props.label}</Text>
+
                 <TextInput
-                    value={this.props.value}
-                    onChangeText={(v) => this.props.onChangeText(v)}
-                    placeholder={this.props.placeholder}
-                    placeholderTextColor={'grey'}
-                    style={[styles.input, this.props.inputStyle]}
-                    underlineColorAndroid={'transparent'}
+                    value                 = {this.props.value}
+                    onChangeText          = {(v) => this.props.onChangeText(v)}
+                    placeholder           = {this.props.placeholder}
+                    placeholderTextColor  = {'grey'}
+                    style                 = {[styles.input, this.props.inputStyle]}
+                    underlineColorAndroid = {'transparent'}
                 />
-                {this.props.error ?
-                    <Text style={[styles.error, this.props.errorStyle]}>{this.props.error}</Text>
-                    : null}
+
+                {this.props.error ? <Text style={[styles.error, this.props.errorStyle]}>{this.props.error}</Text> : null}
+
             </View>
         )
     }
